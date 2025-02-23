@@ -6,6 +6,9 @@ import { ConfigService } from '@nestjs/config';
 export class GeminiService {
   private googleAI: GoogleGenerativeAI;
   private model: GenerativeModel;
+  private cacheId: string | null = null;
+  private chatLog: string[] = [];
+  private readonly initialInput = '----'; // initial input for Banker roleplay
 
   constructor(private readonly configService: ConfigService) {
     const apiKey = this.configService.get<string>('config.genApiKey');
@@ -17,13 +20,37 @@ export class GeminiService {
 
   async generateText(prompt: string): Promise<string> {
     try {
-      const result = await this.model.generateContent(prompt);
+      // add prompt to chat log
+      if (this.chatLog.length === 0) {
+        this.chatLog.push(this.initialInput);
+      }
 
-      const generatedText = result.response.text();
+      this.chatLog.push(`User says: ${prompt}`);
+
+      const context = this.chatLog.join('\n');
+
+      const response = await this.model.generateContent({
+        contents: [
+          {
+            role: 'user',
+            parts: [{ text: context }],
+          },
+        ],
+      });
+
+      const generatedText = response.response.text();
       console.log(generatedText);
+      // add response to chat log
+      this.chatLog.push(`AI says: ${generatedText}`);
+
+      console.log(this.chatLog);
       return generatedText;
     } catch (error) {
-      console.error(error);
+      console.error('Error', error);
     }
+  }
+
+  clearChatLog(): void {
+    this.chatLog = [];
   }
 }
