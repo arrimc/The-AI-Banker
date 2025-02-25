@@ -23,6 +23,7 @@ export class GeminiService {
    */
   onModuleInit() {
     console.log('vault pass is ', this.vaultPass);
+    console.log('chat log is ', this.chatLog);
   }
 
   /*
@@ -99,7 +100,8 @@ export class GeminiService {
   /*
    * Clear the chat log
    */
-  private clearChatLog(): void {
+  clearChatLog(): void {
     this.chatLog = [];
+    console.log('chat log is ', this.chatLog);
   }
 }

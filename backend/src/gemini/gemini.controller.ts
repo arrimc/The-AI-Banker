@@ -48,4 +48,13 @@ export class GeminiController {
     const passStatus = this.geminiService.checkPassword(body.password);
     return passStatus;
   }
+
+  /**
+   * Clear the chat log
+   * @returns void
+   */
+  @Get('clear-log')
+  clearLog(): void {
+    this.geminiService.clearChatLog();
+  }
 }
