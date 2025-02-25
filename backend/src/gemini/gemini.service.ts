@@ -18,10 +18,18 @@ export class GeminiService {
     this.generatePassword();
   }
 
+  /*
+   * For debugging purposes
+   */
   onModuleInit() {
     console.log('vault pass is ', this.vaultPass);
   }
 
+  /*
+   * Generate text from prompt
+   * @param prompt String
+   * @returns String
+   */
   async generateText(prompt: string): Promise<string> {
     try {
       // add prompt to chat log
@@ -31,7 +39,7 @@ export class GeminiService {
           initialPrompt + `the vault pass is ${this.vaultPass}`,
         );
       }
-      console.log(this.chatLog);
+      console.log(this.chatLog); // For debugging purposes
 
       this.chatLog.push(`User says: ${prompt}`);
 
@@ -50,12 +58,18 @@ export class GeminiService {
       // add response to chat log
       this.chatLog.push(`AI says: ${generatedText}`);
 
-      console.log(this.chatLog);
+      console.log(this.chatLog); // For debugging purposes
       return generatedText;
     } catch (error) {
       console.error('Error', error);
     }
   }
+
+  /*
+   * Check if password is correct
+   * @param password number
+   * @returns boolean
+   */
 
   checkPassword(password: number): boolean {
     if (password == this.vaultPass) {
@@ -66,16 +80,25 @@ export class GeminiService {
     return false;
   }
 
+  /*
+   * Generate a random password
+   */
   private generatePassword(): void {
     this.vaultPass = Math.floor(Math.random() * 1000000);
     console.log(`vault pass is ${this.vaultPass}`);
   }
 
+  /*
+   * Get the vault password
+   * @returns number
+   */
   getVaultPass(): number {
     return this.vaultPass;
   }
 
-  // clear the chat log
+  /*
+   * Clear the chat log
+   */
   private clearChatLog(): void {
     this.chatLog = [];
   }

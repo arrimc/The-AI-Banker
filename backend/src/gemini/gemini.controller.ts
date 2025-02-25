@@ -1,10 +1,11 @@
-import { Body, Controller, Post, Get } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import {
   GeminiRequestDto,
   PasswordRequestDto,
   PasswordResponseDto,
 } from './dto/gemini-request.dto';
 import { GeminiService } from './gemini.service';
+import { SkipThrottle, Throttle } from '@nestjs/throttler';
 
 @Controller('ai')
 export class GeminiController {
@@ -30,6 +31,7 @@ export class GeminiController {
    * @returns PasswordResponseDto type number
    */
   @Get('password')
+  @SkipThrottle()
   getPassword(): PasswordResponseDto {
     const password = this.geminiService.getVaultPass();
     return { password: password.toString() };
@@ -41,6 +43,7 @@ export class GeminiController {
    * @returns boolean
    */
   @Post('check-pass')
+  @Throttle({ default: { limit: 15, ttl: 60000 } })
   sendPassword(@Body() body: PasswordRequestDto): boolean {
     const passStatus = this.geminiService.checkPassword(body.password);
     return passStatus;
