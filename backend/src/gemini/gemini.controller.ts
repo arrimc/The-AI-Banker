@@ -1,11 +1,11 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
+import { SkipThrottle, Throttle } from '@nestjs/throttler';
 import {
   GeminiRequestDto,
   PasswordRequestDto,
   PasswordResponseDto,
 } from './dto/gemini-request.dto';
 import { GeminiService } from './gemini.service';
-import { SkipThrottle, Throttle } from '@nestjs/throttler';
 
 @Controller('ai')
 export class GeminiController {
