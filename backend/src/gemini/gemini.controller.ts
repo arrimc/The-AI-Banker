@@ -2,7 +2,8 @@ import { Body, Controller, Get, Post } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SkipThrottle, Throttle } from '@nestjs/throttler';
 import {
-  GeminiRequestDto,
+  GeminiDto,
+  PasswordCheckDto,
   PasswordRequestDto,
   PasswordResponseDto,
 } from './dto/gemini-request.dto';
@@ -15,7 +16,7 @@ export class GeminiController {
 
   /**
    * Send a message to the Gemini AI
-   * @param body  GeminiRequestDto type String
+   * @param body  GeminiDto type String
    * @returns  String
    */
   @Post('message')
@@ -28,17 +29,9 @@ export class GeminiController {
     description: 'Successful response',
     type: String,
   })
-  @ApiBody({ type: GeminiRequestDto })
-  async sendMessage(@Body() body: GeminiRequestDto): Promise<string> {
-    try {
-      const response = await this.geminiService.generateText(body.message);
-      return response;
-    } catch (error) {
-      console.error(error);
-      return JSON.stringify({
-        error: 'Something went wrong, please try again.',
-      });
-    }
+  @ApiBody({ type: GeminiDto })
+  async sendMessage(@Body() body: GeminiDto): Promise<GeminiDto> {
+    return this.geminiService.generateText(body.message);
   }
 
   /**
@@ -57,8 +50,7 @@ export class GeminiController {
     type: PasswordResponseDto,
   })
   getPassword(): PasswordResponseDto {
-    const password = this.geminiService.getVaultPass();
-    return { password: password };
+    return this.geminiService.getVaultPass();
   }
 
   /**
@@ -77,10 +69,9 @@ export class GeminiController {
     description: 'Returns true if the password is correct, otherwise false',
     type: Boolean,
   })
-  @ApiBody({ type: PasswordRequestDto }) // Documenta el body
-  sendPassword(@Body() body: PasswordRequestDto): boolean {
-    const passStatus = this.geminiService.checkPassword(body.password);
-    return passStatus;
+  @ApiBody({ type: PasswordRequestDto })
+  sendPassword(@Body() body: PasswordRequestDto): PasswordCheckDto {
+    return this.geminiService.checkPassword(body.password);
   }
 
   /**

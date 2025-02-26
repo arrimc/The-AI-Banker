@@ -1,7 +1,12 @@
 import { GenerativeModel, GoogleGenerativeAI } from '@google/generative-ai';
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { initialPrompt } from '../prompt/initialPrompt ';
+import {
+  GeminiDto,
+  PasswordCheckDto,
+  PasswordResponseDto,
+} from './dto/gemini-request.dto';
 @Injectable()
 export class GeminiService {
   private googleAI: GoogleGenerativeAI;
@@ -17,13 +22,14 @@ export class GeminiService {
     });
     this.generatePassword();
   }
+  private readonly logger = new Logger('GeminiService');
 
   /*
    * For debugging purposes
    */
   onModuleInit() {
-    console.log('vault pass is ', this.vaultPass);
-    console.log('chat log starts:', this.chatLog);
+    this.logger.debug('vault pass is ', this.vaultPass);
+    this.logger.debug('chat log is ', this.chatLog);
   }
 
   /*
@@ -31,16 +37,15 @@ export class GeminiService {
    * @param prompt String
    * @returns String
    */
-  async generateText(prompt: string): Promise<string> {
+  async generateText(prompt: string): Promise<GeminiDto> {
     try {
       // add prompt to chat log
-
       if (this.chatLog.length === 0) {
         this.chatLog.push(
           initialPrompt + `the vault pass is ${this.vaultPass}`,
         );
       }
-      // console.log(this.chatLog); // For debugging purposes
+      // this.logger.debug(this.chatLog); // For debugging purposes
 
       this.chatLog.push(`User says: ${prompt}`);
 
@@ -59,10 +64,17 @@ export class GeminiService {
       // add response to chat log
       this.chatLog.push(`AI says: ${generatedText}`);
 
-      // console.log(this.chatLog); // For debugging purposes
-      return generatedText;
+      // this.logger.debug(this.chatLog); // For debugging purposes
+
+      return {
+        message: generatedText,
+      };
     } catch (error) {
-      console.error('Error', error);
+      this.logger.error('Error', error);
+      throw new HttpException(
+        'Failed to generate text',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -72,13 +84,11 @@ export class GeminiService {
    * @returns boolean
    */
 
-  checkPassword(password: number): boolean {
-    if (password == this.vaultPass) {
-      console.log('Password is correct');
-      return true;
-    }
-    console.log('Password is incorrect');
-    return false;
+  checkPassword(password: number): PasswordCheckDto {
+    const checkPass = password == this.vaultPass;
+    return {
+      response: checkPass,
+    };
   }
 
   /*
@@ -86,15 +96,17 @@ export class GeminiService {
    */
   private generatePassword(): void {
     this.vaultPass = Math.floor(Math.random() * 1000000);
-    console.log(`vault pass is ${this.vaultPass}`);
+    this.logger.debug(`vault pass is ${this.vaultPass}`);
   }
 
   /*
    * Get the vault password
    * @returns number
    */
-  getVaultPass(): number {
-    return this.vaultPass;
+  getVaultPass(): PasswordResponseDto {
+    return {
+      password: this.vaultPass,
+    };
   }
 
   /*

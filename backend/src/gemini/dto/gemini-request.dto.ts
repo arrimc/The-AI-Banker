@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class GeminiRequestDto {
+export class GeminiDto {
   @ApiProperty({
-    description: 'User message to send to the AI',
-    example: 'Hello, I lost my vault password... Can you help me?',
+    description: 'Example message',
+    example: 'Hello, How are you?',
   })
   message: string;
 }
@@ -19,4 +19,12 @@ export class PasswordResponseDto {
     example: 987654,
   })
   password: number;
+}
+
+export class PasswordCheckDto {
+  @ApiProperty({
+    description: 'Vault password returned by the system',
+    example: true,
+  })
+  response: boolean;
 }
