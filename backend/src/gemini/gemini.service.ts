@@ -23,7 +23,7 @@ export class GeminiService {
    */
   onModuleInit() {
     console.log('vault pass is ', this.vaultPass);
-    console.log('chat log is ', this.chatLog);
+    console.log('chat log starts:', this.chatLog);
   }
 
   /*
@@ -40,7 +40,7 @@ export class GeminiService {
           initialPrompt + `the vault pass is ${this.vaultPass}`,
         );
       }
-      console.log(this.chatLog); // For debugging purposes
+      // console.log(this.chatLog); // For debugging purposes
 
       this.chatLog.push(`User says: ${prompt}`);
 
@@ -59,7 +59,7 @@ export class GeminiService {
       // add response to chat log
       this.chatLog.push(`AI says: ${generatedText}`);
 
-      console.log(this.chatLog); // For debugging purposes
+      // console.log(this.chatLog); // For debugging purposes
       return generatedText;
     } catch (error) {
       console.error('Error', error);
@@ -102,6 +102,5 @@ export class GeminiService {
    */
   clearChatLog(): void {
     this.chatLog = [];
-    console.log('chat log is ', this.chatLog);
   }
 }
