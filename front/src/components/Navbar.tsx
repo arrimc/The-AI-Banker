@@ -6,13 +6,13 @@ interface NavbarProps {
 
 export const Navbar: FC<NavbarProps> = ({ isOpen }) => {
   return (
-    <aside className="fixed lg:static h-screen">
+    <aside className="fixed lg:static h-screen right-0">
       <nav
         className={`
         flex flex-col h-full shadow-sm
         w-64 bg-gray-800 text-white p-4
         transform transition-transform duration-300 ease-in-out z-1
-        ${isOpen ? "translate-x-0" : "-translate-x-full"}
+        ${isOpen ? "translate-x-0" : "translate-x-full"}
       `}
       >
         <div className="mb-8 mt-8">

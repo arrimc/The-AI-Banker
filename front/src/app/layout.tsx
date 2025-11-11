@@ -1,5 +1,4 @@
 "use client";
-import { Footer } from "@/components/Footer";
 import { Navbar } from "@/components/Navbar";
 import { bigShoulders, roboto } from "@/styles/fonts/fonts";
 import "@/styles/globals.css";
@@ -19,6 +18,7 @@ export default function RootLayout({
           ${roboto.variable} 
           ${bigShoulders.variable} 
           antialiased
+          overflow-x-hidden
         `}
       >
         <button
@@ -32,10 +32,10 @@ export default function RootLayout({
           )}
         </button>
         <div className="flex h-screen">
-          <Navbar isOpen={isNavOpen} />
-          <div className={` ransition-all duration-300 ml-0 overflow-hidden`}>
+          <div className={`transition-all duration-300 ml-0 overflow-hidden flex-1`}>
             <main>{children}</main>
           </div>
+          <Navbar isOpen={isNavOpen} />
         </div>
       </body>
     </html>

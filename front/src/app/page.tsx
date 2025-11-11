@@ -6,20 +6,20 @@ export default function Home() {
   return (
     <>
       <main className="min-h-screen flex items-center justify-center">
-        <div className="flex flex-col lg:flex-row items-center justify-center w-full max-w-6xl mx-auto px-4 gap-8">
+        <div className="flex flex-col lg:flex-row items-center justify-center gap-8">
           <div className="w-full lg:flex-1 flex justify-center">
             <div className="text-center">
               <p>test</p>
             </div>
           </div>
 
-          <div className="w-full lg:flex-1 relative">
+          <div className="w-full lg:flex-2 relative">
             <div className="relative z-10">
               <ChatBubble />
             </div>
 
             <div className="reception-counter relative mt-8 flex justify-center">
-              <img className="relative z-0 max-w-full h-auto" src="/images/counter.png" alt="counter"/>
+              <img className="relative z-5 max-w-full h-auto" src="/images/counter.png" alt="counter"/>
               <div className="absolute inset-0 flex items-center justify-center">
                 <Banker />
               </div>
